@@ -5,6 +5,10 @@
   tasks:
   - name: Update a configuration item
     servicenow.itsm.configuration_item:
+      instance:
+        host: "{{ Instance }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
       sys_id: "fecec64ac3922650d57e5c65e4013195"
       environment: production
       operational_status: repair_in_progress
