@@ -11,13 +11,17 @@
         password: "{{ password }}"
       sys_id: "fecec64ac3922650d57e5c65e4013195"
       environment: production
-      operational_status: repair_in_progress
       other:
         fault_count: 1
         classification: Development
-        short_description: Hello world
-        os_version: win2005
-        cpu_type: intel
-        ram: 2002
-        cpu_core_count: 4
+        short_description: "AAP Job ID {{ tower_job_id }} - Server is Compliant against ACME corp CIS requirements as per codebase https://github.com.au/rippa86/AAPWINDemos"
+        os_version: "{{ windows_facts.distribution }}"
+        cpu_type: "{{ windows_facts.architecture2 }}"
+        ram: "{{ windows_facts.memtotal_mb }}"
+        cpu_core_count: "{{ windows_facts.processor_cores }}"
+        dns_domain: "{{ windows_facts.dns_domain }}"
+        cpu_name: Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz
+        cpu_count:
+        os: "{{ windows_facts.os_name }}"
+        disk_space: "20GB"
     
