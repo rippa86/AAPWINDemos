@@ -1,0 +1,86 @@
+---
+- name: PowerShell DSC
+  hosts: "win2025"
+  gather_facts: true
+
+  tasks:
+    - name: Setup PsGallery
+      ansible.windows.win_powershell:
+        script: |
+          $nuget_version = (Get-PackageProvider -Name NuGet -ListAvailable).version
+          $nuget_target_version = [Version]::new('2.8.5.201')
+          if( $nuget_version -lt $nuget_target_version ){
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            Install-PackageProvider -Name NuGet -MinimumVersion $nuget_target_version -Force
+            Install-Module -Name packagemanagement -Force
+            Install-Module -Name powershellget -Force
+          }
+
+    - name: Setup the SecurityPolicyDSC module
+      community.windows.win_psmodule:
+        name: SecurityPolicyDSC
+        module_version: 2.10.0.0
+        state: present
+        accept_license: true
+
+    - name: Set password history
+      ansible.windows.win_dsc:
+        resource_name: AccountPolicy
+        Name: Enforce_password_history
+        Enforce_password_history: 24
+
+    - name: Set maximum password age
+      ansible.windows.win_dsc:
+        resource_name: AccountPolicy
+        Name: Maximum_Password_Age
+        Maximum_Password_Age: 60
+
+    - name: Set minimum password age
+      ansible.windows.win_dsc:
+        resource_name: AccountPolicy
+        Name: Minimum_Password_Age
+        Minimum_Password_Age: 20
+
+    - name: Set minimum password length
+      ansible.windows.win_dsc:
+        resource_name: AccountPolicy
+        Name: Minimum_Password_Length
+        minimum_Password_Length: 8
+
+    - name: Set password complexity requirements
+      ansible.windows.win_dsc:
+        resource_name: AccountPolicy
+        Name: Password_must_meet_complexity_requirements
+        Password_must_meet_complexity_requirements: Enabled
+
+    - name: Export current security policy
+      ansible.windows.win_shell: secedit /export /cfg C:\Windows\Temp\ansible_secpol.inf
+      changed_when: false # This command doesn't change state
+
+    - name: Read the security policy file
+      ansible.windows.win_slurp:
+        src: C:\Windows\Temp\ansible_secpol.inf
+      register: secpol_file
+
+    - name: Decode the policy content
+      set_fact:
+        secpol_content: "{{ secpol_file['content'] | b64decode }}"
+
+    - name: Assert that password history is correct
+      ansible.windows.win_assert:
+        that:
+          - "'PasswordHistorySize = 24' in secpol_content"
+        fail_msg: "FAILED: Password history is not set to 24."
+        success_msg: "PASSED: Password history is correctly set."
+
+    - name: Assert that maximum password age is correct
+      ansible.windows.win_assert:
+        that:
+          - "'MaximumPasswordAge = 60' in secpol_content"
+        fail_msg: "FAILED: Maximum password age is not set to 60."
+        success_msg: "PASSED: Maximum password age is correctly set."
+
+    - name: Clean up the temporary policy file
+      ansible.windows.win_file:
+        path: C:\Windows\Temp\ansible_secpol.inf
+        state: absent
