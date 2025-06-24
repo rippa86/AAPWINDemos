@@ -1,0 +1,17 @@
+---
+- name: PowerShell DSC
+  hosts: "win2025"
+  gather_facts: true
+  tasks:
+  - name: Reboot the Windows machine
+    ansible.windows.win_reboot:
+      msg: "Reboot initiated by Ansible for system updates."
+    register: reboot_result
+
+  - ansible.builtin.wait_for_connection:
+      delay: 10              # (Optional) Seconds to wait before checking connection after reboot
+      timeout: 300           # (Optional) Total time to wait for the connection to be established
+
+  - name: Display reboot result
+    debug:
+      var: reboot_result
