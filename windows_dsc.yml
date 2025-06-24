@@ -58,7 +58,7 @@
       changed_when: false # This command doesn't change state
 
     - name: Read the security policy file
-      ansible.windows.win_slurp:
+      ansible.windows.slurp:
         src: C:\Windows\Temp\ansible_secpol.inf
       register: secpol_file
 
