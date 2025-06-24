@@ -6,7 +6,7 @@
   - name: Update a configuration item
     servicenow.itsm.configuration_item:
       instance:
-        host: "{{ Instance }}"
+        host: "{{ instance }}"
         username: "{{ username }}"
         password: "{{ password }}"
       sys_id: "fecec64ac3922650d57e5c65e4013195"
