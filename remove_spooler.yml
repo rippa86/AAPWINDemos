@@ -1,0 +1,43 @@
+---
+- name: PowerShell DSC
+  hosts: "win2025"
+  gather_facts: true
+
+  tasks:
+  - name: "5.2 | PATCH | Ensure Print Spooler (Spooler) is set to Disabled Member Server"
+    notify: Change_Requires_Reboot
+    block:
+      - name: "5.2 | PATCH | Ensure Print Spooler (Spooler) is set to Disabled Member Server | Check to see if Spooler service exists."
+        ansible.windows.win_service_info:
+          name: Spooler
+        register: spooler_service_info
+
+      - name: "5.2 | PATCH | Ensure Print Spooler (Spooler) is set to Disabled Member Server | RegEdit"
+        ansible.windows.win_regedit:
+          path: HKLM:\SYSTEM\CurrentControlSet\Services\Spooler
+          name: Start
+          data: 4
+          type: dword
+
+      - name: "5.2 | PATCH | Ensure Print Spooler (Spooler) is set to Disabled Member Server | Service"
+        when: spooler_service_info.exists
+        ansible.windows.win_service:
+          name: Spooler
+          start_mode: disabled
+          state: stopped
+  
+  handlers:
+  - name: Change_Requires_Reboot
+    ansible.builtin.set_stats: 
+      reboot: true
+  
+    # - name: Remove Print Spooler service
+    #   ansible.windows.win_dsc:
+    #     resource_name: PrintSpooler
+    #     Ensure: Absent
+    #   register: spooler_result
+
+    # - name: Check if Print Spooler service was removed
+    #   ansible.builtin.debug:
+    #     msg: "Print Spooler service has been removed."
+    #   when: spooler_result.changed
