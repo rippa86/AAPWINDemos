@@ -25,19 +25,9 @@
           name: Spooler
           start_mode: disabled
           state: stopped
-  
+
   handlers:
   - name: Change_Requires_Reboot
     ansible.builtin.set_stats: 
-      reboot: true
-  
-    # - name: Remove Print Spooler service
-    #   ansible.windows.win_dsc:
-    #     resource_name: PrintSpooler
-    #     Ensure: Absent
-    #   register: spooler_result
-
-    # - name: Check if Print Spooler service was removed
-    #   ansible.builtin.debug:
-    #     msg: "Print Spooler service has been removed."
-    #   when: spooler_result.changed
+      data:
+        reboot: true
