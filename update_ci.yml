@@ -1,0 +1,19 @@
+---
+- name: PowerShell DSC
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Update a configuration item
+    servicenow.itsm.configuration_item:
+      sys_id: "fecec64ac3922650d57e5c65e4013195"
+      environment: production
+      operational_status: repair_in_progress
+      other:
+        fault_count: 1
+        classification: Development
+        short_description: Hello world
+        os_version: win2005
+        cpu_type: intel
+        ram: 2002
+        cpu_core_count: 4
+    

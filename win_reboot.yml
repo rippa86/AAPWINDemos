@@ -3,6 +3,10 @@
   hosts: "win2025"
   gather_facts: true
   tasks:
+  - name: set stats for ci updates.
+    ansible.builtin.set_stats:
+      data:
+        windows_facts: "{{ ansible_facts }}"
   - name: Reboot the Windows machine
     ansible.windows.win_reboot:
       msg: "Reboot initiated by Ansible for system updates."
