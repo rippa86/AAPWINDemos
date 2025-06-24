@@ -19,7 +19,7 @@
         cpu_type: "{{ windows_facts.architecture2 }}"
         ram: "{{ windows_facts.memtotal_mb }}"
         cpu_core_count: "{{ windows_facts.processor_cores }}"
-        dns_domain: "{{ windows_facts.dns_domain }}"
+        dns_domain: "{{ windows_facts.windows_domain_role }}"
         cpu_name: Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz
         cpu_count:
         os: "{{ windows_facts.os_name }}"
