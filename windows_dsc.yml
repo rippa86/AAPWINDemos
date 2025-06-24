@@ -64,7 +64,7 @@
         executable: cmd.exe # Ensure this runs in the standard command shell
 
     - name: 2. Read the content of the exported policy file
-      ansible.windows.win_slurp:
+      ansible.windows.slurp:
         src: C:\Windows\Temp\ansible_secpol_verify.inf
       register: secpol_file
 
