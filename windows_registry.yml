@@ -1,0 +1,28 @@
+---
+- name: PowerShell DSC
+  hosts: "win2025"
+  gather_facts: true
+  vars:
+    logon_message_caption: "Privacy Notice"
+    logon_message_text: |
+      This server is part of the Ansible Demo.
+      Access is only granted to David, who is running the demo.
+      All activities may be monitored untill it is destroyed later today.
+      If you are not an authorized user, disconnect immediately.
+
+  tasks:
+  - name: Set the Legal Notice Caption
+    ansible.windows.win_regedit:
+      path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+      name: LegalNoticeCaption
+      data: "{{ logon_message_caption }}"
+      type: string
+      state: present
+
+  - name: Set the Legal Notice Text
+    ansible.windows.win_regedit:
+      path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+      name: LegalNoticeText
+      data: "{{ logon_message_text }}"
+      type: string
+      state: present
