@@ -1,0 +1,20 @@
+---
+- name: ServiceNow Create Incident
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  
+  tasks:
+
+  - name: Update ServiceNow ticket to indicate start
+    servicenow.itsm.api:
+      instance:
+        host: "{{ instance }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+      resource: incident
+      action: patch
+      sys_id: "{{ ansible_eda.event.inc_sysid }}"
+      data:
+        work_notes: "AAP EDA has stopped Spooler Service. Alerting sent for review before Closure"
+    register: snow_var
