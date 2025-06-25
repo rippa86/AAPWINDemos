@@ -20,8 +20,10 @@
         ram: "{{ windows_facts.memtotal_mb }}"
         cpu_core_count: "{{ windows_facts.processor_cores }}"
         dns_domain: "{{ windows_facts.windows_domain_role }}"
-        cpu_name: Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz
-        cpu_count:
+        cpu_name:  "{{ windows_facts.processor[2] }}"
+        cpu_count: "{{ windows_facts.processor_vcpus }}"
         os: "{{ windows_facts.os_name }}"
         disk_space: "20GB"
-    
+        cpu_speed: "{{ windows_facts.processor[2] }}"
+        windows_domain_role: "{{ windows_facts.interfaces[0].dns_domain }}"
+        os_service_pack: "{{ windows_facts.distribution_major_version }}"
