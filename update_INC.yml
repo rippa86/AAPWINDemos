@@ -14,7 +14,7 @@
         password: "{{ password }}"
       resource: incident
       action: patch
-      sys_id: "{{ ansible_eda.event.inc_sysid }}"
+      sys_id: "{{ ansible_eda.event.sys_id }}"
       data:
         work_notes: "AAP EDA has stopped Spooler Service. Alerting sent for review before Closure"
     register: snow_var
