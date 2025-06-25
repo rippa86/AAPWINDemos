@@ -22,33 +22,39 @@
         module_version: 2.10.0.0
         state: present
         accept_license: true
+      ignore_errors: true
 
     - name: Set password history
       ansible.windows.win_dsc:
         resource_name: AccountPolicy
         Name: Enforce_password_history
         Enforce_password_history: 24
+      ignore_errors: true
 
     - name: Set maximum password age
       ansible.windows.win_dsc:
         resource_name: AccountPolicy
         Name: Maximum_Password_Age
         Maximum_Password_Age: 60
+      ignore_errors: true
 
     - name: Set minimum password age
       ansible.windows.win_dsc:
         resource_name: AccountPolicy
         Name: Minimum_Password_Age
         Minimum_Password_Age: 20
+      ignore_errors: true
 
     - name: Set minimum password length
       ansible.windows.win_dsc:
         resource_name: AccountPolicy
         Name: Minimum_Password_Length
         minimum_Password_Length: 8
+      ignore_errors: true
 
     - name: Set password complexity requirements
       ansible.windows.win_dsc:
         resource_name: AccountPolicy
         Name: Password_must_meet_complexity_requirements
         Password_must_meet_complexity_requirements: Enabled
+      ignore_errors: true
