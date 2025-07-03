@@ -1,3 +1,9 @@
   collections:
-   - name: community.windows
-   - name: servicenow.itsm
+    - name: community.windows
+    - name: servicenow.itsm
+    - name: ansible.platform
+    - name: ansible.hub
+    - name: ansible.controller
+    - name: ansible.eda
+    - name: infra.aap_configuration
+    - name: awx.awx
