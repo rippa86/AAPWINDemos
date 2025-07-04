@@ -1,0 +1,13 @@
+- hosts: localhost
+
+  tasks: 
+  
+  - awx.awx.export:
+      #controller_username:
+      #controller_password: 
+      #controller_host: CONTROLLER_HOST
+      workflow_job_templates: 33
+    register: aap
+  
+  - debug: 
+      var: aap

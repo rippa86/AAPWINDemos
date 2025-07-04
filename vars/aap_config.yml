@@ -1,0 +1,108 @@
+controller_projects:
+  - name: "Windows-Demo"
+    organization: Default
+    scm_branch: main
+    scm_clean: 'no'
+    scm_delete_on_update: 'no'
+    scm_type: git
+    scm_update_on_launch: 'no'
+    scm_url: https://github.com/rippa86/AAPWINDemos.git
+    update_project: yes
+controller_credential_types:
+- name: SNOW
+  description: SNOW Stuff
+  inputs:
+    fields:
+      - id: username
+        type: string
+        label: Username
+      - id: password
+        type: string
+        label: Password
+        secret: true
+      - id: instance
+        type: string
+        label: Instance
+    required:
+      - username
+      - password
+      - instance
+    injectors:
+      extra_vars:
+        instance: '{{instance}}'
+        password: '{{password}}'
+        username: '{{username}}'
+
+controller_credentials:
+- name: WinMachine
+  description: Credentials for Windows
+  organization: Default
+  credential_type: Machine
+  inputs:
+    username: Administrator
+    password: updateme
+- name: SNOW
+  description: Credentials for ServiceNow
+  organization: Default
+  credential_type: SNOW
+  inputs:
+    username: "{{ snow_username}}"
+    password: "{{ snow_password }}"
+    instance: "{{ snow_instance }}"
+controller_templates:
+  - name: "Password DSC Config"
+    job_type: run
+    inventory: Windows
+    execution_environment: Default execution environment
+    survey_enabled: false
+    project: "Windows-Demo"
+    playbook: "windows_dsc.yml"
+    credentials:
+    - WinMachine
+  - name: "windows reboot"
+    job_type: run
+    inventory: Windows
+    execution_environment: Default execution environment
+    survey_enabled: false
+    project: "Windows-Demo"
+    playbook: "win_reboot.yml"
+    extra_vars: 
+      windows_reboot: 'no'
+    credentials:
+    - WinMachine
+  - name: "Remove Print Spooler"
+    job_type: run
+    inventory: Windows
+    execution_environment: Default execution environment
+    survey_enabled: false
+    project: "Windows-Demo"
+    playbook: "remove_spooler.yml"
+    credentials:
+    - WinMachine
+  - name: "Update MOTD"
+    job_type: run
+    inventory: Windows
+    execution_environment: Default execution environment
+    survey_enabled: false
+    project: "Windows-Demo"
+    playbook: "windows_registry.yml"
+    credentials:
+    - WinMachine
+  - name: "Update MOTD"
+    job_type: run
+    inventory: Windows
+    execution_environment: Default execution environment
+    survey_enabled: false
+    project: "Windows-Demo"
+    playbook: "update_ci.yml"
+    credentials:
+    - SNOW
+  - name: "Update Incident"
+    job_type: run
+    inventory: Windows
+    execution_environment: Default execution environment
+    survey_enabled: false
+    project: "Windows-Demo"
+    playbook: "update_INC.yml"
+    credentials:
+    - SNOW
